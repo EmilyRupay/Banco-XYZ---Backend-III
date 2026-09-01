@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: bancoxyz-postgres
+    environment:
+      POSTGRES_DB: bancoxyz
+      POSTGRES_USER: bancoxyz
+      POSTGRES_PASSWORD: bancoxyz
+    ports:
+      - "5432:5432"
+    volumes:
+      - bancoxyz-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  bancoxyz-postgres-data:
