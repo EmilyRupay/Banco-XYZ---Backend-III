@@ -1,0 +1,238 @@
+==========================================================
+ EVIDENCIA DE EJECUCIÓN - Proyecto BFF Banco XYZ
+ Fecha de ejecución: 2026-09-13 00:01:22 UTC
+==========================================================
+
+--- 1. Health checks de los 4 servicios ---
+>> GET http://localhost:4000/health
+{"status":"UP","service":"legacy-api","timestamp":"2026-09-13T00:01:22.173Z"}
+
+>> GET http://localhost:4001/health
+{"status":"UP","service":"bff-web","timestamp":"2026-09-13T00:01:22.189Z"}
+
+>> GET http://localhost:4002/health
+{"status":"UP","service":"bff-mobile","timestamp":"2026-09-13T00:01:22.204Z"}
+
+>> GET http://localhost:4003/health
+{"status":"UP","service":"bff-atm","timestamp":"2026-09-13T00:01:22.219Z"}
+
+--- 2. Legacy API (sistema núcleo) ---
+>> GET /legacy/clientes/C001
+{
+    "ID_CLIENTE": "C001",
+    "RUT": "12.345.678-9",
+    "NOMBRE_COMPLETO": "Mar\u00eda Fernanda Soto Rojas",
+    "EMAIL": "maria.soto@correo.cl",
+    "TELEFONO": "+56911111111",
+    "DIRECCION": "Av. Providencia 1234, Santiago",
+    "FECHA_NACIMIENTO": "1988-04-12",
+    "SEGMENTO": "PERSONAS"
+}
+>> GET /legacy/clientes/C001/cuentas
+[
+    {
+        "ID_CUENTA": "CTA-0001",
+        "ID_CLIENTE": "C001",
+        "TIPO_CUENTA": "CUENTA_CORRIENTE",
+        "NRO_CUENTA": "00112233445",
+        "SALDO_DISPONIBLE": 1250340,
+        "SALDO_CONTABLE": 1265340,
+        "MONEDA": "CLP",
+        "ESTADO": "ACTIVA",
+        "FECHA_APERTURA": "2015-03-10"
+    },
+    {
+        "ID_CUENTA": "CTA-0002",
+        "ID_CLIENTE": "C001",
+        "TIPO_CUENTA": "CUENTA_AHORRO",
+        "NRO_CUENTA": "00112233999",
+        "SALDO_DISPONIBLE": 4520000,
+        "SALDO_CONTABLE": 4520000,
+        "MONEDA": "CLP",
+        "ESTADO": "ACTIVA",
+        "FECHA_APERTURA": "2018-06-01"
+    }
+]
+
+--- 3. BFF WEB: dashboard completo (cliente C001) ---
+>> GET /web/clientes/C001/dashboard
+{
+    "cliente": {
+        "idCliente": "C001",
+        "rut": "12.345.678-9",
+        "nombreCompleto": "Mar\u00eda Fernanda Soto Rojas",
+        "email": "maria.soto@correo.cl",
+        "telefono": "+56911111111",
+        "direccion": "Av. Providencia 1234, Santiago",
+        "segmento": "PERSONAS"
+    },
+    "resumen": {
+        "totalCuentas": 2,
+        "patrimonioTotal": 5770340
+    },
+    "cuentas": [
+        {
+            "idCuenta": "CTA-0001",
+            "tipoCuenta": "CUENTA_CORRIENTE",
+            "numeroCuenta": "00112233445",
+            "saldoDisponible": 1250340,
+            "saldoContable": 1265340,
+            "moneda": "CLP",
+            "estado": "ACTIVA",
+            "fechaApertura": "2015-03-10",
+            "tarjetas": [
+                {
+                    "idTarjeta": "TAR-1001",
+                    "tipo": "DEBITO",
+                    "numeroEnmascarado": "**** **** **** 4321",
+                    "estado": "VIGENTE",
+                    "limiteRetiroDiario": 500000
+                }
+            ],
+            "movimientos": [
+                {
+                    "id": "M0005",
+                    "fecha": "2026-09-10",
+                    "tipo": "ABONO",
+                    "descripcion": "Dep\u00f3sito sueldo",
+                    "monto": 900000,
+                    "canal": "SUCURSAL"
+                },
+                {
+                    "id": "M0004",
+                    "fecha": "2026-09-08",
+                    "tipo": "CARGO",
+                    "descripcion": "Retiro cajero autom\u00e1tico",
+                    "monto": -100000,
+                    "canal": "ATM"
+                },
+                {
+                    "id": "M0003",
+                    "fecha": "2026-09-05",
+                    "tipo": "CARGO",
+                    "descripcion": "Pago cuenta luz",
+                    "monto": -38900,
+                    "canal": "WEB"
+                },
+                {
+                    "id": "M0002",
+                    "fecha": "2026-09-03",
+                    "tipo": "ABONO",
+                    "descripcion": "Transferencia recibida",
+                    "monto": 300000,
+                    "canal": "MOVIL"
+                },
+                {
+                    "id": "M0001",
+                    "fecha": "2026-09-01",
+                    "tipo": "CARGO",
+                    "descripcion": "Compra supermercado",
+                    "monto": -45320,
+                    "canal": "WEB"
+                }
+            ],
+            "totalMovimientos": 5
+        },
+        {
+            "idCuenta": "CTA-0002",
+            "tipoCuenta": "CUENTA_AHORRO",
+            "numeroCuenta": "00112233999",
+            "saldoDisponible": 4520000,
+            "saldoContable": 4520000,
+            "moneda": "CLP",
+            "estado": "ACTIVA",
+            "fechaApertura": "2018-06-01",
+            "tarjetas": [],
+            "movimientos": [
+                {
+                    "id": "M0006",
+                    "fecha": "2026-09-02",
+                    "tipo": "ABONO",
+                    "descripcion": "Inter\u00e9s mensual",
+                    "monto": 12500,
+                    "canal": "SISTEMA"
+                }
+            ],
+            "totalMovimientos": 1
+        }
+    ]
+}
+
+--- 4. BFF MOVIL: resumen ligero (cliente C001) ---
+>> GET /mobile/clientes/C001/resumen
+{
+    "nombre": "Mar\u00eda",
+    "saldoTotal": 5770340,
+    "cuentas": [
+        {
+            "id": "CTA-0001",
+            "tipo": "CUENTA_CORRIENTE",
+            "saldo": 1250340
+        },
+        {
+            "id": "CTA-0002",
+            "tipo": "CUENTA_AHORRO",
+            "saldo": 4520000
+        }
+    ]
+}
+>> GET /mobile/cuentas/CTA-0001/saldo
+{
+    "id": "CTA-0001",
+    "saldo": 1250340,
+    "moneda": "CLP"
+}
+>> GET /mobile/cuentas/CTA-0001/movimientos (solo últimos 5)
+[
+    {
+        "fecha": "2026-09-10",
+        "desc": "Dep\u00f3sito sueldo",
+        "monto": 900000
+    },
+    {
+        "fecha": "2026-09-08",
+        "desc": "Retiro cajero autom\u00e1tico",
+        "monto": -100000
+    },
+    {
+        "fecha": "2026-09-05",
+        "desc": "Pago cuenta luz",
+        "monto": -38900
+    },
+    {
+        "fecha": "2026-09-03",
+        "desc": "Transferencia recibida",
+        "monto": 300000
+    },
+    {
+        "fecha": "2026-09-01",
+        "desc": "Compra supermercado",
+        "monto": -45320
+    }
+]
+
+--- 5. BFF CAJERO (ATM): consulta de saldo y retiro (tarjeta TAR-1001) ---
+>> GET /atm/tarjetas/TAR-1001/saldo
+{
+    "tarjeta": "**** **** **** 4321",
+    "saldoDisponible": 1250340,
+    "moneda": "CLP"
+}
+>> POST /atm/tarjetas/TAR-1001/retiro  {"monto": 100000}
+{
+    "autorizado": true,
+    "tarjeta": "**** **** **** 4321",
+    "montoRetirado": 100000,
+    "saldoDisponibleEstimado": 1150340,
+    "moneda": "CLP"
+}
+>> POST /atm/tarjetas/TAR-1001/retiro  {"monto": 999999999} (debe rechazar por límite diario)
+{
+    "error": "Monto excede el l\u00edmite de retiro diario",
+    "limiteDiario": 500000
+}
+
+--- 6. Manejo de errores: cliente inexistente ---
+>> GET /web/clientes/C999/dashboard (esperado 404)
+{"error":"Error obteniendo dashboard web","detalle":"Legacy API respondió 404 para /legacy/clientes/C999"}
+HTTP_STATUS:404

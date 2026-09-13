@@ -1,0 +1,24 @@
+{
+  "name": "bff-bank-xyz",
+  "version": "1.0.0",
+  "description": "Implementacion del patron Backend for Frontend (BFF) para Banco XYZ",
+  "main": "index.js",
+  "scripts": {
+    "start:legacy": "node legacy-api/server.js",
+    "start:web": "node bff-web/server.js",
+    "start:mobile": "node bff-mobile/server.js",
+    "start:atm": "node bff-atm/server.js",
+    "start:all": "concurrently \"npm:start:legacy\" \"npm:start:web\" \"npm:start:mobile\" \"npm:start:atm\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "author": "",
+  "license": "MIT"
+}

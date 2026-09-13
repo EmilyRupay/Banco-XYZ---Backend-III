@@ -1,0 +1,54 @@
+=== Log de consola: legacy-api (puerto 4000) ===
+[legacy-api] Sistema legado del Banco XYZ escuchando en http://localhost:4000
+[0mGET /health [32m200[0m 2.410 ms - 77[0m
+[0mGET /legacy/clientes/C001 [32m200[0m 0.564 ms - 245[0m
+[0mGET /legacy/clientes/C001/cuentas [32m200[0m 0.544 ms - 438[0m
+[0mGET /legacy/clientes/C001 [32m200[0m 0.269 ms - 245[0m
+[0mGET /legacy/clientes/C001/cuentas [32m200[0m 0.283 ms - 438[0m
+[0mGET /legacy/cuentas/CTA-0001/tarjetas [32m200[0m 0.371 ms - 164[0m
+[0mGET /legacy/cuentas/CTA-0001/movimientos [32m200[0m 0.448 ms - 726[0m
+[0mGET /legacy/cuentas/CTA-0002/tarjetas [32m200[0m 0.151 ms - 2[0m
+[0mGET /legacy/cuentas/CTA-0002/movimientos [32m200[0m 0.350 ms - 144[0m
+[0mGET /legacy/clientes/C001 [32m200[0m 0.282 ms - 245[0m
+[0mGET /legacy/clientes/C001/cuentas [32m200[0m 0.189 ms - 438[0m
+[0mGET /legacy/cuentas/CTA-0001 [32m200[0m 0.323 ms - 219[0m
+[0mGET /legacy/cuentas/CTA-0001/movimientos?limite=5 [32m200[0m 0.286 ms - 726[0m
+[0mGET /legacy/tarjetas/TAR-1001 [32m200[0m 0.351 ms - 162[0m
+[0mGET /legacy/cuentas/CTA-0001 [32m200[0m 0.190 ms - 219[0m
+[0mGET /legacy/tarjetas/TAR-1001 [32m200[0m 0.203 ms - 162[0m
+[0mGET /legacy/cuentas/CTA-0001 [32m200[0m 0.171 ms - 219[0m
+[0mGET /legacy/tarjetas/TAR-1001 [32m200[0m 0.206 ms - 162[0m
+[0mGET /legacy/cuentas/CTA-0001 [32m200[0m 0.201 ms - 219[0m
+[0mGET /legacy/clientes/C999 [33m404[0m 0.256 ms - 33[0m
+
+=== Log de consola: bff-web (puerto 4001) ===
+(node:252) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[bff-web] BFF Web escuchando en http://localhost:4001
+[0mGET /health [32m200[0m 2.144 ms - 74[0m
+[0mGET /web/clientes/C001/dashboard [32m200[0m 49.401 ms - 1618[0m
+Error: Legacy API respondió 404 para /legacy/clientes/C999
+    at get (/home/claude/proyecto/bff-bank/shared/legacyClient.js:14:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async /home/claude/proyecto/bff-bank/bff-web/server.js:38:21 {
+  status: 404
+}
+[0mGET /web/clientes/C999/dashboard [33m404[0m 3.359 ms - 107[0m
+
+=== Log de consola: bff-mobile (puerto 4002) ===
+(node:253) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[bff-mobile] BFF Móvil escuchando en http://localhost:4002
+[0mGET /health [32m200[0m 2.257 ms - 77[0m
+[0mGET /mobile/clientes/C001/resumen [32m200[0m 32.463 ms - 169[0m
+[0mGET /mobile/cuentas/CTA-0001/saldo [32m200[0m 2.425 ms - 48[0m
+[0mGET /mobile/cuentas/CTA-0001/movimientos [32m200[0m 8.164 ms - 339[0m
+
+=== Log de consola: bff-atm (puerto 4003) ===
+(node:254) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[bff-atm] BFF Cajeros Automáticos escuchando en http://localhost:4003
+[0mGET /health [32m200[0m 2.292 ms - 74[0m
+[0mGET /atm/tarjetas/TAR-1001/saldo [32m200[0m 36.630 ms - 74[0m
+[0mPOST /atm/tarjetas/TAR-1001/retiro [32m200[0m 18.905 ms - 123[0m
+[0mPOST /atm/tarjetas/TAR-1001/retiro [33m403[0m 8.606 ms - 74[0m
