@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: banco-xyz-batch
+
+  # Perfil activo por defecto: h2 (cero configuracion, ideal para probar en Visual Studio Code)
+  # Para usar PostgreSQL: mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+  profiles:
+    active: h2
+
+  # IMPORTANTE: Spring Boot solo autodetecta como "embedded" las URLs jdbc:h2:mem:...
+  # Como usamos H2 en modo archivo (jdbc:h2:file:...) para que los datos persistan
+  # entre ejecuciones, hay que forzar "always" o schema.sql NUNCA se ejecuta y
+  # las tablas de negocio (daily_transaction_report, account_balance, etc.) no existen.
+  sql:
+    init:
+      mode: always
+
+  batch:
+    job:
+      # No auto-ejecutar via el JobLauncherApplicationRunner por defecto:
+      # el arranque de los 3 jobs lo controla BatchJobRunner (config/BatchJobRunner.java)
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.batch: INFO
+    com.duocuc.bancoxyz: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Rutas de los archivos CSV de entrada (carpeta src/main/resources/data)
+bancoxyz:
+  batch:
+    chunk-size: 5
+    hilos-paralelos: 3
+    archivos:
+      transacciones: classpath:data/transactions.csv
+      cuentas: classpath:data/accounts.csv
+      cuentas-anuales: classpath:data/annual_accounts.csv
+
+---
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:file:./data/bancoxyz;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  batch:
+    jdbc:
+      platform: h2
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bancoxyz
+    driver-class-name: org.postgresql.Driver
+    username: bancoxyz
+    password: bancoxyz
+  batch:
+    jdbc:
+      platform: postgresql

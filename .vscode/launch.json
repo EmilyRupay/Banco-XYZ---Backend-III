@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "BancoXyzBatchApplication (perfil h2 - por defecto)",
+      "request": "launch",
+      "mainClass": "com.duocuc.bancoxyz.batch.BancoXyzBatchApplication",
+      "projectName": "banco-xyz-batch"
+    },
+    {
+      "type": "java",
+      "name": "BancoXyzBatchApplication (perfil postgres)",
+      "request": "launch",
+      "mainClass": "com.duocuc.bancoxyz.batch.BancoXyzBatchApplication",
+      "projectName": "banco-xyz-batch",
+      "args": "--spring.profiles.active=postgres"
+    }
+  ]
+}
